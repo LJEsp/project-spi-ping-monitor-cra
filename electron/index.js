@@ -21,8 +21,9 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
+    minWidth: 1400,
+    minHeight: 800,
+
     webPreferences: { backgroundThrottling: false }
   });
 
@@ -30,7 +31,7 @@ function createWindow() {
   mainWindow.loadURL(startUrl);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function() {
@@ -71,9 +72,29 @@ ipcMain.on("host:request", (event, host) => {
   pingData.host = host;
 
   ping.promise.probe(host, { timeout: 10 }).then(res => {
-    pingData.isAlive = res.isAlive;
-    pingData.time = res.time;
-    pingData.numeric_host = res.numeric_host;
+    // pingData.isAlive = res.alive;
+    // pingData.time = res.time;
+    // pingData.numeric_host = res.numeric_host;
+
+    if (res.alive) {
+      pingData.status = "Up";
+    } else if (res.time === "unknown" && res.numeric_host !== "oul") {
+      pingData.status = "Timed out";
+    } else if (res.numeric_host === "oul") {
+      pingData.status = "Not found";
+    }
+
+    if (res.time === "unknown") {
+      pingData.time = "- ";
+    } else if (res.time) {
+      pingData.time = `${res.time} ms`;
+    }
+
+    if (res.numeric_host === "oul") {
+      pingData.ip = "- ";
+    } else {
+      pingData.ip = res.numeric_host;
+    }
 
     mainWindow.webContents.send(`host:${host}`, pingData);
   });
