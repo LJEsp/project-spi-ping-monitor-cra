@@ -19,7 +19,7 @@ const StylHeader = styled.h2`
 const StylHostContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-`
+`;
 
 class PingContainer extends Component {
   render() {
@@ -38,7 +38,7 @@ class PingContainer extends Component {
     });
 
     return (
-      <StylWrapper>
+      <StylWrapper className="item">
         <div>
           <StylHeader>{site.header}</StylHeader>
         </div>

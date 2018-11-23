@@ -1,10 +1,14 @@
+const fs = require("fs");
+const path = require("path");
+const url = require("url");
 const electron = require("electron");
 // Module to control application life.
 const { app, BrowserWindow, ipcMain } = electron;
 const ping = require("ping");
 
-const path = require("path");
-const url = require("url");
+const { dialog } = electron;
+const Json2csvParser = require("json2csv").Parser;
+const moment = require("moment");
 
 const startUrl =
   process.env.ELECTRON_START_URL ||
@@ -21,7 +25,7 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    minWidth: 1400,
+    minWidth: 1000,
     minHeight: 800,
 
     webPreferences: { backgroundThrottling: false }
@@ -98,4 +102,38 @@ ipcMain.on("host:request", (event, host) => {
 
     mainWindow.webContents.send(`host:${host}`, pingData);
   });
+});
+
+ipcMain.on("csv:download", (event, downloadable) => {
+  // Convert JSON to CSV using module
+  const fields = ["name", "hosts.host", "hosts.detail"];
+
+  const json2csvParser = new Json2csvParser({ fields, unwind: ["hosts"] });
+  const csv = json2csvParser.parse(downloadable);
+
+  // Save CSV with dialog
+  dialog.showSaveDialog(
+    {
+      defaultPath: `SPi Ping - ${moment().format("MMM DD YYYY, h mm ss a")}.csv`
+    },
+    fileName => {
+      if (fileName === undefined) return;
+
+      fs.writeFile(fileName, csv, err => {
+        if (err) {
+          dialog.showMessageBox({
+            type: "error",
+            buttons: ["OK"],
+            message: `An error has occurred: ${err}`
+          });
+        }
+
+        dialog.showMessageBox({
+          type: "info",
+          buttons: ["OK"],
+          message: "The file was successfully saved."
+        });
+      });
+    }
+  );
 });

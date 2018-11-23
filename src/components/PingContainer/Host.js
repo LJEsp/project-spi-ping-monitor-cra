@@ -3,7 +3,6 @@ import _ from "lodash";
 import styled from "styled-components";
 
 const electron = window.require("electron");
-const fs = electron.remote.require("fs");
 const ipcRenderer = electron.ipcRenderer;
 
 class Host extends Component {
@@ -67,20 +66,13 @@ class Host extends Component {
     const { host } = this.props;
     const { ping } = this.state;
 
-    let status;
-    let ms;
-    let ip;
-
     return (
       <StylWrapper>
         <StylHost>{host}</StylHost> >{" "}
-
         <StylStatus status={ping.status}>
           {!_.isEmpty(ping) ? ping.status : "..."},{" "}
         </StylStatus>
-
         <StylMs>{!_.isEmpty(ping) ? ping.time : "..."}, </StylMs>
-
         <StylIp>{!_.isEmpty(ping) ? ping.ip : "..."}</StylIp>
       </StylWrapper>
     );

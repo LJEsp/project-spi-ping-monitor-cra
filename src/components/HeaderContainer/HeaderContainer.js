@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
+// import Host from "./Host";
 
 const StylWrapper = styled.div`
   position: fixed;
@@ -38,6 +43,42 @@ const StylCheckbox = styled.input`
 const StylCheckboxLabel = styled.label``;
 
 class HeaderContainer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+
+    this.download = this.download.bind(this);
+  }
+
+  download() {
+    const downloadable = [];
+    const sites = document.querySelectorAll(".item");
+
+    // debugger;
+
+    sites.forEach(site => {
+      const dlSite = {};
+      dlSite.name = site.childNodes[0].textContent;
+      dlSite.hosts = [];
+
+      site.childNodes[1].childNodes.forEach(host => {
+        const dlHost = {};
+        const array = host.textContent.split(" > ");
+        dlHost.host = array[0];
+        dlHost.detail = array[1];
+
+        dlSite.hosts.push(dlHost);
+      });
+
+      downloadable.push(dlSite);
+    });
+
+    ipcRenderer.send("csv:download", downloadable);
+
+    console.log(downloadable);
+  }
+
   render() {
     const {
       hostCount,
@@ -69,10 +110,43 @@ class HeaderContainer extends Component {
         </StylCounterContainer>
 
         <div>
-          <button>Download</button>
+          <StylDownloadButton
+            disabled={!this.props.isFinished}
+            onClick={this.download}
+          >
+            {this.props.isFinished ? "Download CSV" : "Pinging hosts"}
+          </StylDownloadButton>
         </div>
       </StylWrapper>
     );
   }
 }
+
+const StylDownloadButton = styled.button`
+  background-color: #a5ce39;
+  background-color: ${props => (props.disabled ? "#6a7b84" : "#a5ce39")};
+  color: ${props => (props.disabled ? "#ffffff" : "#2a363d")};
+  box-sizing: border-box;
+  width: 12rem;
+  font-weight: 700;
+
+  padding: 0.5rem 1rem;
+  border: none;
+
+  ${props => {
+    if (!props.disabled) {
+      return css`
+        &:hover {
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        &:active {
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+          transform: translateY(2px);
+        }
+      `;
+    }
+  }}
+`;
+
 export default HeaderContainer;

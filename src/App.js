@@ -95,6 +95,7 @@ class App extends Component {
           pingCount={this.state.pingCount}
           handleContinuousChange={this.handleContinuousChange}
           isContinuous={this.state.isContinuous}
+          isFinished={this.state.isFinished}
         />
 
         <StylContentContainer>{pingList}</StylContentContainer>
