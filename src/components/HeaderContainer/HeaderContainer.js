@@ -42,6 +42,33 @@ const StylCheckbox = styled.input`
 
 const StylCheckboxLabel = styled.label``;
 
+const StylDownloadButton = styled.button`
+  background-color: #a5ce39;
+  background-color: ${props => (props.disabled ? "#6a7b84" : "#a5ce39")};
+  color: ${props => (props.disabled ? "#ffffff" : "#2a363d")};
+  box-sizing: border-box;
+  width: 12rem;
+  font-weight: 700;
+
+  padding: 0.5rem 1rem;
+  border: none;
+
+  ${props => {
+    if (!props.disabled) {
+      return css`
+        &:hover {
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        &:active {
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+          transform: translateY(2px);
+        }
+      `;
+    }
+  }}
+`;
+
 class HeaderContainer extends Component {
   constructor(props) {
     super(props);
@@ -121,32 +148,5 @@ class HeaderContainer extends Component {
     );
   }
 }
-
-const StylDownloadButton = styled.button`
-  background-color: #a5ce39;
-  background-color: ${props => (props.disabled ? "#6a7b84" : "#a5ce39")};
-  color: ${props => (props.disabled ? "#ffffff" : "#2a363d")};
-  box-sizing: border-box;
-  width: 12rem;
-  font-weight: 700;
-
-  padding: 0.5rem 1rem;
-  border: none;
-
-  ${props => {
-    if (!props.disabled) {
-      return css`
-        &:hover {
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
-        }
-
-        &:active {
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-          transform: translateY(2px);
-        }
-      `;
-    }
-  }}
-`;
 
 export default HeaderContainer;

@@ -18,7 +18,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
-    "electron-dev": "set ELECTRON_START_URL=http://localhost:3000 && electron ."
+    "electron-dev": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,8 +33,20 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "electron": "^3.0.10"
+    "electron": "^3.0.10",
+    "electron-builder": "^20.38.0"
   },
-  "main": "electron/index.js",
-  "homepage": "./"
+  "build": {
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "extends": null,
+    "files": [
+      "./build/**/*",
+      "./electron"
+    ]
+  },
+  "homepage": "./",
+  "main": "./electron/index.js"
 }
