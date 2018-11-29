@@ -22,7 +22,7 @@ class App extends Component {
     this.state = {
       hostCount: this.countHosts(),
       pingCount: 0,
-      isContinuous: true,
+      isContinuous: false,
       isFinished: false
     };
 

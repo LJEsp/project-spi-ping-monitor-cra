@@ -27,7 +27,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     minWidth: 1000,
     minHeight: 800,
-
+    icon: path.join(__dirname, "../public/android-chrome-256x256.png"),
     webPreferences: { backgroundThrottling: false }
   });
 

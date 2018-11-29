@@ -41,11 +41,12 @@
       "target": "nsis",
       "icon": "build/icon.ico"
     },
-    "extends": null,
     "files": [
       "./build/**/*",
       "./electron"
-    ]
+    ],
+    "productName": "SPi Ping Monitor",
+    "extends": null
   },
   "homepage": "./",
   "main": "./electron/index.js"
